@@ -1,8 +1,8 @@
 import { useAccessTokenStore } from '@/stores/accessToken';
-import { HttpApiServices } from './HttpApiServices';
+import {HttpApiServices} from './HttpApiServices';
 
-export default class LoginServices extends HttpApiServices {
-  async login(body: any) {
+export default class LoginService extends HttpApiServices  {
+  async login(body:any) {
 
     const store = useAccessTokenStore();
 
@@ -13,18 +13,18 @@ export default class LoginServices extends HttpApiServices {
     store.setStoken(data.token);
 
     const usuarioResponse = await this.get('/user');
-    if (usuarioResponse && usuarioResponse.data) {
-      const usuario = usuarioResponse.data;
+    if(usuarioResponse && usuarioResponse.data){
+        const usuario = usuarioResponse.data;
 
-      localStorage.setItem('id', usuario.id);
-      localStorage.setItem('name', usuario.nome);
+        localStorage.setItem('id', usuario.id);
+        localStorage.setItem('name', usuario.nome);
 
-      if (usuario.avatar) {
-        localStorage.setItem('avatar', usuario.avatar);
-      }
+        if (usuario.avatar) {
+          localStorage.setItem('avatar', usuario.avatar);
+        }
     }
 
-
+    
   }
 
   logout() {

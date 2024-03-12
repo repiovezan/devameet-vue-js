@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+
 export default defineComponent({
     props: {
         icon: String,
@@ -7,11 +8,11 @@ export default defineComponent({
         name: String,
         type: String,
         placeholder: String,
-        modelValue: String
+        modelValue: String,
     },
     data() {
         return {
-            inputFocus: false,
+            inputFocus: false
         }
     },
     methods: {
@@ -24,11 +25,11 @@ export default defineComponent({
             get() {
                 return this.modelValue;
             },
-            set(value: any) {
-                this.$emit('setInput', value);
-            },
-        },
-    },
+            set(v: any) {
+                this.$emit('setInput', v);
+            }
+        }
+    }
 });
 </script>
 
