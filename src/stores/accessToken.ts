@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia';
 
 export const useAccessTokenStore = defineStore({
     id: 'accessToken',
@@ -6,13 +6,13 @@ export const useAccessTokenStore = defineStore({
         token: localStorage.getItem('token')
     }),
     getters: {
-        isAuthtenticated: (state) => state.token !== null
-            && state.token !== undefined
+        isAuthenticated: (state: any) => state.token !== null
+            && state.token !== undefined 
             && state.token !== ''
     },
     actions: {
-        setStoken(t: string) {
+        setToken(t: string){
             this.token = t;
         }
     }
-})
+});

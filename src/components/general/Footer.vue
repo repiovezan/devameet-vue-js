@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Navigation from './Navigation.vue'
+import Navigation from './Navigation.vue';
 
 export default defineComponent({
-    components: { Navigation }
+    components:{Navigation}
 });
 </script>
 
@@ -13,4 +13,4 @@ export default defineComponent({
     </div>
 </template>
 
-<style src="@/assets/styles/footer.scss" lang="scss" />
+<style src="@/assets/styles/footer.scss" lang="scss"/>

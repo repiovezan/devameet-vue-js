@@ -1,7 +1,7 @@
-import { HttpApiServices } from './HttpApiServices';
+import { HttpApiServices } from "./HttpApiServices";
 
-export default class RegisterServices extends HttpApiServices {
-    async register(body: any) {
-        await this.post('/auth/register', body);
+export class RegisterServices extends HttpApiServices{
+    async register(body: any){
+        return await this.post('/auth/register', body);
     }
 }

@@ -1,13 +1,20 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
+import Navigation from './Navigation.vue';
 
 export default defineComponent({
-
+    components:{Navigation},
+    props: {
+        hide: Boolean
+    }
 });
 </script>
 
 <template>
-    <h1>Header</h1>
+    <div class="container-header" :class="{hide: hide}">
+        <img src="../../assets/images/logo.svg" alt="Logo Devameet" class="logo"/>
+        <Navigation />
+    </div>
 </template>
 
-<style lang="scss" />
+<style src="@/assets/styles/header.scss" lang="scss"/>

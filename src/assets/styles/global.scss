@@ -1,18 +1,18 @@
-@import "./configs.scss";
+@import './configs.scss';
 
 @font-face {
     font-family: $fontRegular;
-    src: url("../fonts/BiennaleRegular.otf");
+    src: url('../fonts/BiennaleRegular.otf');
 }
 
 @font-face {
     font-family: $fontBold;
-    src: url("../fonts/BiennaleBold.otf") format("opentype");
+    src: url('../fonts/BiennaleBold.otf');
 }
 
 @font-face {
     font-family: $fontLight;
-    src: url("../fonts/BiennaleLight.otf") format("opentype");
+    src: url('../fonts/BiennaleLight.otf');
 }
 
 * {
@@ -30,54 +30,31 @@ body {
     min-height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     -webkit-box-pack: center;
-    justify-content: center;
     -webkit-box-align: center;
-    align-items: center;
-    padding: 0px;
-}
-
-.avatar {
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    border: 2px solid $primaryColor;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-        border-radius: 50%;
-        width: 120px;
-        height: 120px;
-        object-fit: contain;
-    }
-}
-
-.oculto {
-    display: none !important;
+    padding: 0;
 }
 
 input {
     font-size: 16px;
     letter-spacing: 0.01em;
     color: $primaryColor;
-    border-radius: 0px;
+    border-radius: 0;
     border: none;
     outline: none;
 
-    &:focus {
+    &.focus {
         border-color: $primaryColor;
     }
 
     &::placeholder {
-        /* chrome, opera, safari e firefox */
         color: $greyColor2;
         opacity: 1;
     }
 
     &:-ms-input-placeholder {
-        /*ie 10-11*/
         color: $greyColor2;
     }
 
@@ -89,7 +66,7 @@ input {
 button {
     margin-top: 30px;
     width: 100%;
-    height: 56px;
+    height: 48px;
     background-color: $primaryColor;
     border: none;
     color: white;
@@ -98,10 +75,36 @@ button {
     cursor: pointer;
 }
 
+.avatar {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $primaryColor;
+
+    img {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+    }
+
+    span {
+        display: none;
+    }
+}
+
+.oculto {
+    display: none !important;
+}
+
 body {
     @media screen and (min-width: $desktopBreakpoint) {
         background-color: $primaryColorWithOpacity;
-        background-image: url("../images/background.svg");
+        background-image: url('../images/background.svg');
+        background-size: cover;
     }
 }
 
@@ -116,7 +119,7 @@ body {
         p {
             font-size: 12px;
             color: $greyColor;
-            margin: 0px;
+            margin: 0;
         }
 
         span {
@@ -125,10 +128,10 @@ body {
         }
 
         .line {
-            margin: 16px 0px;
+            margin: 16px 0;
             width: 100%;
-            height: 0px;
-            border-bottom: 0.5px solid $greyColor3;
+            height: 0;
+            border-bottom: 0, 5px solid $greyColor3;
         }
 
         .avatars {
@@ -144,44 +147,83 @@ body {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 2px solid $primaryColor4;
+                border: 2px solid $greyColor1;
                 border-radius: 4px;
+                background-color: $primaryColor4;
 
                 &.selected {
-                    border: 2px solid $primaryColor;
+                    border-color: $primaryColor;
                 }
-
-                background-color: $primaryColor4;
 
                 img {
                     height: 100%;
                 }
             }
         }
-    }
 
-    .title {
-        font-size: 30px;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-
-    .actions {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-bottom: 20px;
-
-        span {
-            font-size: 16px;
-            color: $primaryColor;
-            text-decoration: underline;
-            margin-right: 20px;
+        .title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
-        button {
-            margin: 0px;
-            width: 40%;
+        .actions {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            span {
+                cursor: pointer;
+                font-size: 16px;
+                color: $primaryColor;
+                text-decoration: underline;
+                margin-right: 20px;
+            }
+
+            button {
+                margin: 0;
+                width: 40%;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            span {
+                font-weight: 700;
+                font-size: 18px;
+                margin-bottom: 16px;
+            }
+
+            p {
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 24px;
+            }
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+
+                .color {
+                    cursor: pointer;
+                    width: 80px;
+                    height: 80px;
+                    margin: 0 8px;
+                    border: 2px solid transparent;
+
+                    &.selected{
+                        border-color: $greyColor1;
+                    }
+                }
+            }
+
         }
     }
 
@@ -196,17 +238,40 @@ body {
                     margin: 8px;
                     cursor: pointer;
 
+                    &:hover {
+                        border: 2px solid $greyColor3;
+                    }
+
                     &.selected {
                         &:hover {
                             border: 2px solid $primaryColor;
                         }
                     }
-
-                    &:hover {
-                        border: 2px solid $greyColor3;
-                    }
                 }
             }
         }
+    }
+}
+
+.scroll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 60%;
+    overflow-x: scroll;
+    align-items: flex-end;
+    justify-content: flex-start;
+
+    &::-webkit-scrollbar{
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track{
+        background: $primaryColorWithOpacity;
+    }
+
+    &::-webkit-scrollbar-thumb{
+        background: $primaryColor;
+        border-radius: 8px;
     }
 }

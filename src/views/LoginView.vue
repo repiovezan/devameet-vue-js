@@ -1,67 +1,63 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import PublicInput from '../components/general/CustomInput.vue'
+import CustomInput from '@/components/general/CustomInput.vue';
+import { defineComponent } from 'vue';
 import loginIcon from '../assets/images/mail.svg';
 import passwordIcon from '../assets/images/key.svg';
-import LoginServices from '../services/LoginServices'
-import router from '../router';
+import { LoginServices } from '@/services/LoginServices';
+import router from '@/router';
 
-const loginServices = new LoginServices()
+const loginServices = new LoginServices();
+
 export default defineComponent({
+    components: { CustomInput },
     setup() {
         return {
             loginIcon,
-            passwordIcon,
-            loginServices
-        };
+            passwordIcon
+        }
     },
     data() {
         return {
-            login: "",
-            password: "",
-            loading: false,
-            error: "",
-        };
-    },
-    props: {
-        msg: String,
-    },
-    methods: {
-        async efetuarLogin() {
-            try {
-                if (!this.login || !this.login.trim()
-                    || !this.password || !this.password.trim()) {
-                    this.error = "Favor informar usuário e password";
-                    return;
-                }
-                this.loading = true;
-                await loginServices.login({
-                    login: this.login,
-                    password: this.password
-                });
-                this.loading = false;
-                router.push('/');
-            } catch (e: any) {
-                console.log('Erro ao efetuar login:', e);
-                this.loading = false;
-                if (e?.response?.data?.message) {
-                    return this.error = e?.response?.data?.message;
-                } else {
-                    return this.error = "Não foi possível efetuar o login, tente novamente!";
-                }
-            }
-        },
-        setLogin(v: any) {
-            this.login = v;
-        },
-        setpassword(v: any) {
-            this.password = v;
+            login: '',
+            password: '',
+            error: '',
+            loading: false
         }
     },
-    components: { PublicInput },
-    computed: {
-        buttonText() {
-            return this.loading ? "...Carregando" : "Login"
+    computed:{
+        buttonText(){
+            return this.loading ? '...Carregando' : 'Login'
+        }
+    },
+    methods:{
+        setLogin(v:string){
+            this.login = v;
+        },
+        setPassword(v:string){
+            this.password = v;
+        },
+        async doLogin(){
+            try{
+                if(!this.login || !this.login.trim() ||
+                    !this.password || !this.password.trim()){
+                        return this.error = 'Favor informar usuário e senha';
+                    }
+
+                    this.loading = true;
+                    await loginServices.login({login: this.login, password: this.password});
+                    this.loading = false;
+                    return router.push('/');
+            }catch(e : any){
+                console.log('Erro ao efetuar login:', e)
+
+                if(e?.response?.data?.message){
+                    this.error = e?.response?.data?.message;
+                }else{
+                    this.error = 'Não foi possível efetuar o login, tente novamente!';
+                }
+            }
+
+            this.loading = false;
         }
     }
 });
@@ -71,22 +67,22 @@ export default defineComponent({
     <div class="container-public">
         <img src="../assets/images/logo.svg" alt="Logo Devameet" class="logo" />
         <form>
-            <p v-if="$route.query.cadastroSucesso" class="success">Cadastro efetuado, faça o login para continuar!</p>
+            <p v-if="$route.query.success" class="success">Cadastro efetuado com sucesso, faça o login para continuar</p>
             <p v-if="error" class="error">{{ error }}</p>
+            <CustomInput :icon="loginIcon" alt="Login" name="Login" placeholder="Login" type="text"
+                :model-value="login" @setInput="setLogin"/>
+            <CustomInput :icon="passwordIcon" alt="Senha" name="Senha" placeholder="Senha" type="password"
+                :model-value="password" @setInput="setPassword"/>
 
-            <PublicInput :icon="loginIcon" alt="Login" name="Login" placeholder="Login" type="text" :modelValue="login"
-                @setInput="setLogin" />
-
-            <PublicInput :icon="passwordIcon" alt="Senha" name="Senha" placeholder="Senha" type="password"
-                :modelValue="password" @setInput="setpassword" />
-
-            <button @click.enter.prevent="efetuarLogin" :disabled="loading">{{ buttonText }}</button>
+            <button type="button" @click="doLogin">{{ buttonText }}</button>
             <div class="link">
                 <p>Não possui uma conta?</p>
-                <router-link to="/register">Faça seu cadastro agora!</router-link>
+                <router-link to="/register">Faça seu cadastro agora</router-link>
             </div>
         </form>
     </div>
 </template>
 
-<style src="@/assets/styles/public.scss" lang="scss" />
+
+
+<style src="@/assets/styles/public.scss" lang="scss"/>

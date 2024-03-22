@@ -1,39 +1,37 @@
-import { useAccessTokenStore } from '@/stores/accessToken';
-import {HttpApiServices} from './HttpApiServices';
+import router from "@/router";
+import { useAccessTokenStore } from "@/stores/accessToken";
+import { HttpApiServices } from "./HttpApiServices";
 
-export default class LoginService extends HttpApiServices  {
-  async login(body:any) {
+export class LoginServices extends HttpApiServices{
+    async login(body: any){
+        const store = useAccessTokenStore();
 
-    const store = useAccessTokenStore();
+        const {data} = await this.post('/auth/login', body);
 
-    const { data } = await this.post('/auth/login', body);
+        if(data){
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('token', data.token);
 
-    localStorage.setItem('email', data.email);
-    localStorage.setItem('token', data.token);
-    store.setStoken(data.token);
+            store.setToken(data.token);
 
-    const usuarioResponse = await this.get('/user');
-    if(usuarioResponse && usuarioResponse.data){
-        const usuario = usuarioResponse.data;
+            const userReponse = await this.get('/user');
+            if(userReponse && userReponse.data){
+                const user = userReponse.data;
 
-        localStorage.setItem('id', usuario.id);
-        localStorage.setItem('name', usuario.nome);
+                localStorage.setItem('id', user.id);
+                localStorage.setItem('name', user.name);
 
-        if (usuario.avatar) {
-          localStorage.setItem('avatar', usuario.avatar);
+                if(user.avatar){
+                    localStorage.setItem('avatar', user.avatar);
+                }
+            }
         }
     }
 
-    
-  }
-
-  logout() {
-    const store = useAccessTokenStore();
-    localStorage.removeItem('_id');
-    localStorage.removeItem('nome');
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
-    localStorage.removeItem('avatar');
-    store.setStoken('');
-  }
+    logout(){
+        const store = useAccessTokenStore();
+        localStorage.clear();
+        store.setToken('');
+        router.push({name: 'login'});
+    }
 }

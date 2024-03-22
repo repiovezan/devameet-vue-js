@@ -1,127 +1,131 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import PublicInput from '../components/general/CustomInput.vue'
-import loginIcon from '../assets/images/mail.svg';
+import CustomInput from '@/components/general/CustomInput.vue';
+import AvatarInput from '@/components/general/AvatarInput.vue';
+import { defineComponent } from 'vue';
 import userIcon from '../assets/images/user.svg';
+import loginIcon from '../assets/images/mail.svg';
 import passwordIcon from '../assets/images/key.svg';
-import router from '../router';
-import InputAvatar from '../components/general/InputAvatar.vue';
-import RegisterServices from '../services/RegisterServices';
+import { RegisterServices } from '@/services/RegisterServices';
+import router from '@/router';
 
-const registerServices = new RegisterServices()
+const registerServices = new RegisterServices();
 
 export default defineComponent({
+    components: { CustomInput, AvatarInput },
     setup() {
         return {
-            loginIcon,
-            passwordIcon,
             userIcon,
-            registerServices
-        };
+            loginIcon,
+            passwordIcon
+        }
     },
     data() {
         return {
-            email: "",
-            name: "",
-            password: "",
-            confirmacao: "",
-            loading: false,
-            error: "",
-            image: ""
-        };
+            name: '',
+            email: '',
+            password: '',
+            confirm: '',
+            image: '',
+            error: '',
+            loading: false
+        }
+    },
+    computed: {
+        buttonText() {
+            return this.loading ? '...Carregando' : 'Salvar'
+        }
     },
     methods: {
-        async cadastrar() {
-            console.log('cadastrar')
+        setName(v: string) {
+            this.name = v;
+        },
+        setMail(v: string) {
+            this.email = v;
+        },
+        setPassword(v: string) {
+            this.password = v;
+        },
+        setConfirm(v: string) {
+            this.confirm = v;
+        },
+        setImage(v: string) {
+            this.image = v;
+        },
+        async doRegister() {
+            const { email, password, confirm, image, name } = this;
+
             try {
-                this.error = "";
-                if (!this.email || !this.email.trim() ||
-                    !this.name || !this.name.trim() ||
-                    !this.password || !this.password.trim() ||
-                    !this.confirmacao || !this.confirmacao.trim() ||
-                    !this.image || !this.image.trim()) {
-                    return this.error = "Favor preencher o formulário";
+                if (!email || !email.trim()
+                    || !password || !password.trim()
+                    || !confirm || !confirm.trim()
+                    || !name || !name.trim()
+                    || !image || !image.trim()
+                ) {
+                    return this.error = 'Favor preencher todos os dados';
                 }
 
-                if (this.password !== this.confirmacao) {
-                    return this.error = "Senha e confirmação não são iguais";
+                if (password !== confirm) {
+                    return this.error = 'Senha e confirmação precisam ser iguais';
                 }
+
                 this.loading = true;
 
                 const body = {
-                    name: this.name,
-                    email: this.email,
-                    password: this.password,
-                    avatar: this.image,
+                    name,
+                    email,
+                    password,
+                    avatar: image
                 }
 
                 await registerServices.register(body);
-
                 this.loading = false;
-                return router.push({ name: 'login', query: { cadastroSucesso: 'true' } });
+                return router.push({name: 'login', query: {success: 'true'}});
             } catch (e: any) {
-                console.log('Erro ao efetuar cadastro:', e);
-                this.loading = false;
+                console.log('Erro ao cadastrar usuario:', e)
+
                 if (e?.response?.data?.message) {
-                    return this.error = e?.response?.data?.message;
+                    this.error = e?.response?.data?.message;
                 } else {
-                    return this.error = "Não foi possível efetuar o cadastro, tente novamente!";
+                    this.error = 'Não foi possível cadastrar o usuario, tente novamente!';
                 }
             }
-        },
-        setNome(v: any) {
-            this.name = v;
-        },
-        setEmail(v: any) {
-            this.email = v;
-        },
-        setSenha(v: any) {
-            this.password = v;
-        },
-        setCorfirmarSenha(v: any) {
-            this.confirmacao = v;
-        },
-        setImagem(v: any) {
-            this.image = v;
-        }
-    },
-    components: { PublicInput, InputAvatar },
-    computed: {
-        buttonText() {
-            return this.loading ? "...Carregando" : "Cadastrar"
+
+            this.loading = false;
         }
     }
 });
 </script>
 
 <template>
-    <div :class="['container-public', 'register']">
-        <img src="../assets/images/logo.svg" alt="Logo Devagram" class="logo" />
+    <div class="container-public register">
+        <img src="../assets/images/logo.svg" alt="Logo Devameet" class="logo" />
         <form>
-            <InputAvatar :image="image" @setImagem="setImagem" />
-
+            <AvatarInput :image="image" @setImage="setImage" />
             <p v-if="error" class="error">{{ error }}</p>
+            <CustomInput :icon="userIcon" alt="Nome" name="Nome" placeholder="Nome" type="text" :model-value="name"
+                @setInput="setName" />
+            <CustomInput :icon="loginIcon" alt="Login" name="Login" placeholder="Login" type="text" :model-value="email"
+                @setInput="setMail" />
+            <CustomInput :icon="passwordIcon" alt="Senha" name="Senha" placeholder="Senha" type="password"
+                :model-value="password" @setInput="setPassword" />
+            <CustomInput :icon="passwordIcon" alt="Confirme" name="Confirme" placeholder="Confirme a senha"
+                type="password" :model-value="confirm" @setInput="setConfirm" />
 
-            <PublicInput :icon="userIcon" alt="Nome Completo" name="Nome Completo" placeholder="Nome Completo"
-                type="text" :modelValue="name" @setInput="setNome" />
-
-            <PublicInput :icon="loginIcon" alt="E-mail" name="Email" placeholder="E-mail" type="text"
-                :modelValue="email" @setInput="setEmail" />
-
-            <PublicInput :icon="passwordIcon" alt="Senha" name="Senha" placeholder="Senha" type="password"
-                :modelValue="password" @setInput="setSenha" />
-
-            <PublicInput :icon="passwordIcon" alt="Confirmar Senha" name="Confirmar" placeholder="Confirmar Senha"
-                type="password" :modelValue="confirmacao" @setInput="setCorfirmarSenha" />
-
-            <button @click.enter.prevent="cadastrar" :disabled="loading">{{ buttonText }}</button>
-            <div class="link row">
+            <button type="button" @click="doRegister">{{ buttonText }}</button>
+            <div class="link">
                 <p>Já possui uma conta?</p>
-                <router-link :to="{ name: 'login' }">Faça seu login agora!</router-link>
+                <router-link to="/">Faça seu login agora!</router-link>
             </div>
         </form>
     </div>
 </template>
 
 
-<style src="@/assets/styles/public.scss" lang="scss" />
+
+
+
+
+
+
+
+<style src="@/assets/styles/public.scss" lang="scss"/>
