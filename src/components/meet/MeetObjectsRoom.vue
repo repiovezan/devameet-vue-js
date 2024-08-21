@@ -12,29 +12,35 @@ export default defineComponent({
     methods: {
         moveSelected(event: any) {
             if (this.selected?._id) {
-                let to = '';
+                let newX = this.selected.x;
+                let newY = this.selected.y;
 
-                switch (event.key) {
-                    case 'ArrowUp':
-                        to = 'up'
-                        break;
-                    case 'ArrowDown':
-                        to = 'down'
-                        break;
-                    case 'ArrowLeft':
-                        to = 'left'
-                        break;
-                    case 'ArrowRight':
-                        to = 'right'
-                        break;
-                    default: break;
-                }
+        switch (event.key) {
+            case 'ArrowUp':
+                newY = this.selected.y - 1;  
+                break;
+            case 'ArrowDown':
+                newY = this.selected.y + 1;  
+                break;
+            case 'ArrowLeft':
+                newX = this.selected.x - 1;  
+                break;
+            case 'ArrowRight':
+                newX = this.selected.x + 1; 
+                break;
+            default: break;
+        }
 
-                if(to){
-                    this.$emit('moveObject', {to, selected: this.selected});
-                }
-            }
-        },
+        // Ver se a posição pode passar // apenas mesas
+        const isBlocked = this.objects.some(obj => 
+            obj.type === 'table' && obj.x === newX && obj.y === newY
+        );
+
+        if (!isBlocked) {
+            this.$emit('moveObject', {to: event.key.replace('Arrow', '').toLowerCase(), selected: this.selected});
+        }
+    }
+}
         getImageFromObject(object: any) {
             if (object?.name?.trim().length > 0) {
                 const path = `../../assets/objects/${object?.type}/${object.name}${object.orientation ? '_' + object.orientation : ''}.png`;
